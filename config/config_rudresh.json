@@ -1,0 +1,19 @@
+{
+  "data_source": "file",
+  "raw_data_file_path": "/Users/rudresh/PycharmProjects/ril_model/csv_data/data_final_10m.csv",
+  "topic_name": "abcd2",
+  "kafka_ip": "localhost",
+  "kafka_port": 9092,
+  "partition_size": 10,
+  "partition_id": 0,
+  "group_id": 4,
+  "initial_offset": 0,
+  "batch_size": 3000,
+  "kafka_home": "/Users/rudresh/Documents/Personal/Softwares/kafka_2.11-0.10.2.0",
+
+  "produce_message": true,
+  "consume_message": true,
+
+  "hdfs_host":"192.168.50.96",
+  "hdfs_port":"50070"
+}
