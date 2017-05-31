@@ -4,9 +4,11 @@
 @Description: Data Publish Manager - to manage the data publishing job
 """
 
-import DataReader as data_reader
-from KafkaWrapper import Kafka
 import time
+
+from .KafkaWrapper import Kafka
+
+from utils import DataReader as data_reader
 
 
 class DataPublishManager:

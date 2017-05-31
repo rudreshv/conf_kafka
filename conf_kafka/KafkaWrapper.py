@@ -4,9 +4,12 @@
 @Description: Wrapper for kafka connection and api functions
 """
 
+import logging
+import subprocess
+
 import confluent_kafka
-import logging, subprocess
-from Singleton import Singleton
+
+from utils.Singleton import Singleton
 
 log = logging.getLogger(__name__)
 

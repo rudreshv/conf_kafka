@@ -3,13 +3,17 @@
 @Created on: 13/04/2017
 """
 
+import argparse
+import ast
+import os
+import time
 
-from DataPublishManager import DataPublishManager
-from Constants import Constants as constants
-from DataConsumeManager import DataConsumeManager
-from KafkaWrapper import Kafka
-from CommonFunctions import Common
-import json, argparse, time
+from conf_kafka.Constants import Constants as constants
+from conf_kafka.DataConsumeManager import DataConsumeManager
+from conf_kafka.DataPublishManager import DataPublishManager
+from conf_kafka.KafkaWrapper import Kafka
+
+from conf_kafka.CommonFunctions import Common
 
 
 class Workflow:
@@ -64,7 +68,7 @@ class Workflow:
                 msg_list, offset = data_consumer.consume_by_partition_id(offset)
                 if len(msg_list) < self.props[constants.KafkaConstants.BATCH_SIZE]:
                     consume = False
-                print(len(msg_list),msg_list)
+                print(len(msg_list), msg_list)
             end_time = time.time()
             print("time taken to consume messages", end_time - start_time, "seconds")
 
@@ -87,26 +91,30 @@ def str2int(v):
 
 if __name__ == '__main__':
     """ Read the arguments """
+    CONFIG = ast.literal_eval(os.environ["KAFKA_PRODUCER_CONFIG"])
     parser = argparse.ArgumentParser()
 
-    # example run: python3.5 Workflow.py  -ds file -dp "/Users/rudresh/PycharmProjects/ril_model/csv_data/data_file_1.csv" -t "topic_1"  -k_ip "localhost" -k_port 9092 -p_size 10 -p_id 0 -g_id 4 -off 0 -b 1000 -k_home "/Users/rudresh/Documents/Personal/Softwares/kafka_2.11-0.10.2.0" -prod True -cons true -h_host 192.168.50.96 -h_port 9092
+    # example run: python3.5 Workflow.py  -ds file -dp "/Users/rudresh/PycharmProjects/ril_model/csv_data/data_file_1.csv" -t "topic_1"  -k_ip "localhost" -k_port 9092 -p_size 10 -p_id 0 -g_id 4 -off 0 -b 1000 -k_home "/Users/rudresh/Documents/Personal/Softwares/kafka_2.11-0.10.2.0" -prod True -cons true -h_host 192.168.50.96 -h_port 50070
 
-    parser.add_argument('-ds', '--data_source', help='data source', required=True)
-    parser.add_argument('-dp', '--raw_data_file_path', help='raw data file path', required=True)
-    parser.add_argument('-t', '--topic_name', help='topic name', required=True)
-    parser.add_argument('-k_ip', '--kafka_ip', help='kafka host ip ', required=True)
-    parser.add_argument('-k_port', '--kafka_port', type=str2int, help='kafka port', required=True)
-    parser.add_argument('-p_size', '--partition_size', type=str2int, help='partition size', required=True)
-    parser.add_argument('-p_id', '--partition_id', type=str2int, help='partition id', required=True)
-    parser.add_argument('-g_id', '--group_id', help='group id', required=True)
-    parser.add_argument('-off', '--initial_offset', type=str2int, help='initial offset', required=True)
-    parser.add_argument('-b', '--batch_size', type=str2int, help='batch size', required=True)
-    parser.add_argument('-k_home', '--kafka_home', help='kafka home', required=False)
-    parser.add_argument('-prod', '--produce_message', type=str2bool, help='produce message', required=True)
-    parser.add_argument('-cons', '--consume_message', type=str2bool, help='consume message', required=True)
-    parser.add_argument('-h_host', '--hdfs_host', help='hdfs host', required=True)
-    parser.add_argument('-h_port', '--hdfs_port', type=str2int, help='hdfs port', required=True)
-
+    parser.add_argument('-ds', '--data_source', help='data source', default=CONFIG["DATA_SOURCE"])
+    parser.add_argument('-dp', '--raw_data_file_path', help='raw data file path', default=CONFIG["RAW_DATA_FILE_PATH"])
+    parser.add_argument('-t', '--topic_name', help='topic name', default=CONFIG["TOPIC_NAME"])
+    parser.add_argument('-k_ip', '--kafka_ip', help='kafka host ip ', default=CONFIG["KAFKA_IP"])
+    parser.add_argument('-k_port', '--kafka_port', type=str2int, help='kafka port', default=CONFIG["KAFKA_PORT"])
+    parser.add_argument('-p_size', '--partition_size', type=str2int, help='partition size',
+                        default=CONFIG["PARTITION_SIZE"])
+    parser.add_argument('-p_id', '--partition_id', type=str2int, help='partition id', default=CONFIG["PARTITION_ID"])
+    parser.add_argument('-g_id', '--group_id', help='group id', default=CONFIG["GROUP_ID"])
+    parser.add_argument('-off', '--initial_offset', type=str2int, help='initial offset',
+                        default=CONFIG["INITIAL_OFFSET"])
+    parser.add_argument('-b', '--batch_size', type=str2int, help='batch size', default=CONFIG["BATCH_SIZE"])
+    parser.add_argument('-k_home', '--kafka_home', help='kafka home', required=False, default=CONFIG["KAFKA_HOME"])
+    parser.add_argument('-prod', '--produce_message', type=str2bool, help='produce message',
+                        default=CONFIG["PRODUCE_MESSAGE"])
+    parser.add_argument('-cons', '--consume_message', type=str2bool, help='consume message',
+                        default=CONFIG["CONSUME_MESSAGE"])
+    parser.add_argument('-dfs_host', '--hdfs_host', help='hdfs host', default=CONFIG["HDFS_HOST"])
+    parser.add_argument('-dfs_port', '--hdfs_port', type=str2int, help='hdfs port', default=CONFIG["HDFS_PORT"])
     props = vars(parser.parse_args())
 
     workflow = Workflow(props)

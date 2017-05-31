@@ -6,7 +6,8 @@
 """
 
 from concurrent.futures import ProcessPoolExecutor
-from KafkaWrapper import Kafka
+
+from conf_kafka.KafkaWrapper import Kafka
 
 
 class DataConsumeManager:
