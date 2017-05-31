@@ -101,7 +101,7 @@ if __name__ == '__main__':
     parser.add_argument('-g_id', '--group_id', help='group id', required=True)
     parser.add_argument('-off', '--initial_offset', type=str2int, help='initial offset', required=True)
     parser.add_argument('-b', '--batch_size', type=str2int, help='batch size', required=True)
-    parser.add_argument('-k_home', '--kafka_home', help='kafka home', required=True)
+    parser.add_argument('-k_home', '--kafka_home', help='kafka home', required=False)
     parser.add_argument('-prod', '--produce_message', type=str2bool, help='produce message', required=True)
     parser.add_argument('-cons', '--consume_message', type=str2bool, help='consume message', required=True)
     parser.add_argument('-h_host', '--hdfs_host', help='hdfs host', required=True)
